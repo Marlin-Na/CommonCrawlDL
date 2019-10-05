@@ -1,7 +1,6 @@
 import gzip
 import io
 from gzip import decompress
-import requests
 import urllib
 import itertools
 import random

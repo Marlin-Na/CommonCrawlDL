@@ -1,7 +1,7 @@
 import gzip
 import io
 from gzip import decompress
-import urllib.request as urllib
+import urllib.request
 import itertools
 import random
 import sqlite3

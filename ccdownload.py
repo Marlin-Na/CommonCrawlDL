@@ -6,6 +6,8 @@ import itertools
 import random
 import sqlite3
 import os
+import sys
+import time
 
 
 # There are 56000 files, each with size of 150MB (gzipped) / 450MB (text).
@@ -102,11 +104,22 @@ def main():
     ccdldb.create_urlcontent()
 
     urls = get_wet_index(sample_size=FILE_SAMPLE_SIZE)
-    for url in urls:
-        print("====== Processing WET file at {} ======".format(url))
-        iter_url_content = parse_wet(gz_url(url))
-        iter_url_content = iter_sample(iter_url_content, ratio=SAMPLE_RATIO)
-        ccdldb.insert_urlcontent(iter_url_content)
+    for idx, url in enumerate(urls):
+        while True:
+            max_try_time = 3
+            try_time = 0
+            try:
+                print("====== Processing WET file {} ======".format(idx))
+                iter_url_content = parse_wet(gz_url(url))
+                iter_url_content = iter_sample(iter_url_content, ratio=SAMPLE_RATIO)
+                ccdldb.insert_urlcontent(iter_url_content)
+                break
+            except ConnectionError as err:
+                if try_time == max_try_time:
+                    raise err
+                try_time += 1
+                print("== ConnectionError, retrying ==")
+                time.sleep(1)
 
 main()
 

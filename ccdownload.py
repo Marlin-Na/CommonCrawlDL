@@ -1,7 +1,7 @@
 import gzip
 import io
 from gzip import decompress
-import urllib
+import urllib3
 import itertools
 import random
 import sqlite3
@@ -32,7 +32,7 @@ def get_wet_index(sample_size=None):
 
 # Sample input: https://commoncrawl.s3.amazonaws.com/crawl-data/CC-MAIN-2019-39/segments/1568514570740.10/wet/CC-MAIN-20190915052433-20190915074433-00000.warc.wet.gz
 def gz_url(url):
-    response = urllib.request.urlopen(url)
+    response = urllib3.request.urlopen(url)
     conn = gzip.GzipFile(fileobj=response)
     return io.TextIOWrapper(conn)
 
